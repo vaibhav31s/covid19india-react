@@ -15,7 +15,7 @@ import {
   getStatistic,
 } from '../utils/commonfunctions';
 
-import anime from 'animejs';
+import {animate, createSpring} from 'animejs';
 import React, {useState, useMemo} from 'react';
 import * as Icon from 'react-feather';
 import {Helmet} from 'react-helmet';
@@ -38,8 +38,7 @@ function State(props) {
   });
 
   useEffectOnce(() => {
-    anime({
-      targets: '.highlight',
+    animate('.highlight', {
       duration: 200,
       delay: 500,
       translateX:
@@ -52,7 +51,7 @@ function State(props) {
           : mapStatistic === 'deceased'
           ? `${width * 0.75}px`
           : '0px',
-      easing: 'spring(1, 80, 90, 10)',
+      ease: createSpring({mass: 1, stiffness: 80, damping: 90, velocity: 10}),
       opacity: 1,
     });
   });
@@ -159,10 +158,14 @@ function State(props) {
               className="clickable"
               onClick={() => {
                 setMapStatistic('confirmed');
-                anime({
-                  targets: '.highlight',
+                animate('.highlight', {
                   translateX: `${width * 0}px`,
-                  easing: 'spring(1, 80, 90, 10)',
+                  ease: createSpring({
+                    mass: 1,
+                    stiffness: 80,
+                    damping: 90,
+                    velocity: 10,
+                  }),
                 });
               }}
             ></div>
@@ -170,10 +173,14 @@ function State(props) {
               className="clickable"
               onClick={() => {
                 setMapStatistic('active');
-                anime({
-                  targets: '.highlight',
+                animate('.highlight', {
                   translateX: `${width * 0.25}px`,
-                  easing: 'spring(1, 80, 90, 10)',
+                  ease: createSpring({
+                    mass: 1,
+                    stiffness: 80,
+                    damping: 90,
+                    velocity: 10,
+                  }),
                 });
               }}
             ></div>
@@ -181,10 +188,14 @@ function State(props) {
               className="clickable"
               onClick={() => {
                 setMapStatistic('recovered');
-                anime({
-                  targets: '.highlight',
+                animate('.highlight', {
                   translateX: `${width * 0.5}px`,
-                  easing: 'spring(1, 80, 90, 10)',
+                  ease: createSpring({
+                    mass: 1,
+                    stiffness: 80,
+                    damping: 90,
+                    velocity: 10,
+                  }),
                 });
               }}
             ></div>
@@ -192,10 +203,14 @@ function State(props) {
               className="clickable"
               onClick={() => {
                 setMapStatistic('deceased');
-                anime({
-                  targets: '.highlight',
+                animate('.highlight', {
                   translateX: `${width * 0.75}px`,
-                  easing: 'spring(1, 80, 90, 10)',
+                  ease: createSpring({
+                    mass: 1,
+                    stiffness: 80,
+                    damping: 90,
+                    velocity: 10,
+                  }),
                 });
               }}
             ></div>

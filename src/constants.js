@@ -1,4 +1,4 @@
-import {hi, te, gu, ta, bn} from 'date-fns/locale/';
+import {hi, te, gu, ta, bn} from 'date-fns/locale';
 
 export const PRIMARY_STATISTICS = [
   'confirmed',
@@ -64,7 +64,7 @@ export const ZONE_COLORS = {
 };
 
 export const MAPS_DIR =
-  process.env.NODE_ENV === 'production' ? '/mini_maps' : '/maps';
+  import.meta.env.MODE === 'production' ? '/mini_maps' : '/maps';
 
 export const MAP_META = {
   AP: {

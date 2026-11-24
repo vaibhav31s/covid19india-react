@@ -20,7 +20,7 @@ const FADE_OUT = {
 const Tooltip = ({data, children}) => {
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
 
-  const transitions = useTransition(isTooltipVisible, null, {
+  const transitions = useTransition(isTooltipVisible, {
     from: FADE_OUT,
     enter: FADE_IN,
     leave: FADE_OUT,
@@ -44,15 +44,15 @@ const Tooltip = ({data, children}) => {
     >
       {children}
 
-      {transitions.map(({item, key, props}) =>
+      {transitions((style, item) =>
         item ? (
-          <animated.div style={props}>
-            <div key={key} className="message">
+          <animated.div style={style}>
+            <div className="message">
               <p>{data}</p>
             </div>
           </animated.div>
         ) : (
-          <animated.div key={key}></animated.div>
+          <animated.div></animated.div>
         )
       )}
     </span>

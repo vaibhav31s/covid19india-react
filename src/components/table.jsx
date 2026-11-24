@@ -3,10 +3,10 @@ import Row from './row';
 import {PRIMARY_STATISTICS} from '../constants';
 import {capitalize, abbreviate, getStatistic} from '../utils/commonfunctions';
 
-import {TriangleUpIcon, TriangleDownIcon} from '@primer/octicons-v2-react';
+import {TriangleUpIcon, TriangleDownIcon} from '@primer/octicons-react';
 import classnames from 'classnames';
 import equal from 'fast-deep-equal';
-import produce from 'immer';
+import {produce} from 'immer';
 import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Link} from 'react-router-dom';
@@ -115,13 +115,11 @@ function Table({data, regionHighlighted, setRegionHighlighted}) {
     [sortData, data]
   );
 
-  const [trail, set] = useTrail(2, () => ({
-    transform: 'translate3d(0, 10px, 0)',
-    opacity: 0,
+  const trail = useTrail(2, {
+    from: {transform: 'translate3d(0, 10px, 0)', opacity: 0},
+    to: {transform: 'translate3d(0, 0px, 0)', opacity: 1},
     config: config.wobbly,
-  }));
-
-  set({transform: 'translate3d(0, 0px, 0)', opacity: 1});
+  });
 
   return (
     <React.Fragment>

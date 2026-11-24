@@ -1,6 +1,6 @@
 import axios from 'axios';
 import classnames from 'classnames';
-import produce from 'immer';
+import {produce} from 'immer';
 import L from 'leaflet';
 import * as Knn from 'leaflet-knn';
 import React, {useState, useEffect, useCallback} from 'react';

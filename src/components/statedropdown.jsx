@@ -1,20 +1,20 @@
 import {STATE_NAMES} from '../constants';
 
 import React, {useState, useRef} from 'react';
-import {useHistory} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import {useTransition, animated} from 'react-spring';
 import {useClickAway} from 'react-use';
 
 const StateDropdown = ({stateCode}) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useClickAway(dropdownRef, () => {
     setShowDropdown(false);
   });
 
-  const transitions = useTransition(showDropdown, null, {
+  const transitions = useTransition(showDropdown, {
     from: {
       opacity: 0,
       transform: 'translate3d(0, 2px, 0)',
@@ -48,9 +48,9 @@ const StateDropdown = ({stateCode}) => {
         {STATE_NAMES[stateCode]}
       </h1>
 
-      {transitions.map(({item, key, props}) =>
+      {transitions((style, item) =>
         item ? (
-          <animated.div className="dropdown" style={props} ref={dropdownRef}>
+          <animated.div className="dropdown" style={style} ref={dropdownRef}>
             {Object.keys(STATE_NAMES)
               .filter((stateCode) => stateCode !== 'UN' && stateCode !== 'TT')
               .map((stateCode) => (
@@ -59,7 +59,7 @@ const StateDropdown = ({stateCode}) => {
                   className="item"
                   onClick={() => {
                     setShowDropdown(false);
-                    history.push(`/state/${stateCode}`);
+                    navigate(`/state/${stateCode}`);
                   }}
                 >
                   {STATE_NAMES[stateCode]}
@@ -67,7 +67,7 @@ const StateDropdown = ({stateCode}) => {
               ))}
           </animated.div>
         ) : (
-          <animated.div style={props}></animated.div>
+          <animated.div style={style}></animated.div>
         )
       )}
 

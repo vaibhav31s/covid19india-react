@@ -4,13 +4,12 @@ import './i18n';
 import * as serviceWorker from './serviceWorker';
 
 import React, {Suspense} from 'react';
-import ReactDOM from 'react-dom';
+import {createRoot} from 'react-dom/client';
 
-ReactDOM.render(
+createRoot(document.getElementById('root')).render(
   <Suspense fallback={''}>
     <App />
-  </Suspense>,
-  document.getElementById('root')
+  </Suspense>
 );
 
 // If you want your app to work offline and load faster, you can change

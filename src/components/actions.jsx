@@ -4,7 +4,7 @@ import Updates from './updates';
 import {fetcher} from '../utils/commonfunctions';
 
 import {parse, format} from 'date-fns';
-import {utcToZonedTime} from 'date-fns-tz';
+import {toZonedTime} from 'date-fns-tz';
 import React, {useMemo, useState, useEffect} from 'react';
 import * as Icon from 'react-feather';
 import {useSpring, animated, useTrail, config} from 'react-spring';
@@ -140,7 +140,10 @@ const ActionsPanel = ({
 
   const getTimeFromMilliseconds = (lastViewedLog) => {
     return format(
-      utcToZonedTime(parse(lastViewedLog, 'T', new Date()), 'Asia/Kolkata'),
+      toZonedTime(
+        parse(String(lastViewedLog), 'T', new Date()),
+        'Asia/Kolkata'
+      ),
       'dd MMM, p'
     );
   };
@@ -150,7 +153,7 @@ const ActionsPanel = ({
       <animated.div
         className="actions"
         style={{
-          opacity: opacity.interpolate((o) => 1 - o),
+          opacity: opacity.to((o) => 1 - o),
           transform,
           pointerEvents: isTimelineMode ? 'none' : '',
         }}
@@ -183,7 +186,7 @@ const ActionsPanel = ({
         className="actions timeline"
         style={{
           opacity,
-          transform: transform.interpolate((t) => `${t} rotateX(180deg)`),
+          transform: transform.to((t) => `${t} rotateX(180deg)`),
           pointerEvents: !isTimelineMode ? 'none' : '',
         }}
       >

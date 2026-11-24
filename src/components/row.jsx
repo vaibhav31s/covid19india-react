@@ -9,15 +9,15 @@ import {
   getStatistic,
 } from '../utils/commonfunctions';
 
-import {TriangleUpIcon, TriangleDownIcon} from '@primer/octicons-v2-react';
+import {TriangleUpIcon, TriangleDownIcon} from '@primer/octicons-react';
 import classnames from 'classnames';
 import equal from 'fast-deep-equal';
-import produce from 'immer';
+import {produce} from 'immer';
 import React, {useState, useCallback, useMemo} from 'react';
 import {Info} from 'react-feather';
 import * as Icon from 'react-feather';
 import {useTranslation} from 'react-i18next';
-import {useHistory} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import {useSpring, animated, config} from 'react-spring';
 import {createBreakpoint, useLocalStorage} from 'react-use';
 
@@ -27,23 +27,21 @@ function PureCell({statistic, data}) {
   const total = getStatistic(data, 'total', statistic);
   const delta = getStatistic(data, 'delta', statistic);
 
-  const spring = useSpring(
-    {
+  const spring = useSpring({
+    total: total,
+    delta: delta,
+    from: {
       total: total,
       delta: delta,
-      from: {
-        total: total,
-        delta: delta,
-      },
     },
-    config.gentle
-  );
+    config: config.gentle,
+  });
 
   return (
     <td>
       {statistic !== 'active' && (
         <animated.span className={classnames('delta', `is-${statistic}`)}>
-          {spring.delta.interpolate((delta) =>
+          {spring.delta.to((delta) =>
             delta > 0
               ? '\u2191' + formatNumber(Math.floor(delta))
               : delta < 0
@@ -53,7 +51,7 @@ function PureCell({statistic, data}) {
         </animated.span>
       )}
       <animated.span className="total">
-        {spring.total.interpolate((total) => formatNumber(Math.floor(total)))}
+        {spring.total.to((total) => formatNumber(Math.floor(total)))}
       </animated.span>
     </td>
   );
@@ -177,7 +175,7 @@ function Row({stateCode, data, regionHighlighted, setRegionHighlighted}) {
     isAscending: false,
   });
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const {t} = useTranslation();
 
   const Chevron = useMemo(
@@ -318,7 +316,7 @@ function Row({stateCode, data, regionHighlighted, setRegionHighlighted}) {
               colSpan={1}
               style={{width: '1.5rem'}}
               onClick={() => {
-                history.push(`state/${stateCode}`);
+                navigate(`state/${stateCode}`);
               }}
             >
               {t('See more details on {{state}}', {

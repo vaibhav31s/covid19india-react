@@ -9,7 +9,7 @@ import {getIndiaYesterdayISO, parseIndiaDate} from '../utils/commonfunctions';
 
 import 'intersection-observer';
 
-import {PinIcon, IssueOpenedIcon} from '@primer/octicons-v2-react';
+import {PinIcon, IssueOpenedIcon} from '@primer/octicons-react';
 import classnames from 'classnames';
 import {formatISO, sub} from 'date-fns';
 import equal from 'fast-deep-equal';

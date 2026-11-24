@@ -6,8 +6,8 @@ import {
 } from '../constants';
 import {capitalize} from '../utils/commonfunctions';
 
-import Bloodhound from 'corejs-typeahead';
-import produce from 'immer';
+import Bloodhound from 'corejs-typeahead/dist/bloodhound';
+import {produce} from 'immer';
 import React, {useState, useCallback, useRef} from 'react';
 import * as Icon from 'react-feather';
 import {useTranslation} from 'react-i18next';
@@ -231,13 +231,11 @@ function Search() {
   const targetInput = document.getElementById('search-placeholder');
   if (targetInput) loopThroughSuggestions(targetInput, 0);*/
 
-  const [trail, set] = useTrail(3, () => ({
-    transform: 'translate3d(0, 10px, 0)',
-    opacity: 0,
+  const trail = useTrail(3, {
+    from: {transform: 'translate3d(0, 10px, 0)', opacity: 0},
+    to: {transform: 'translate3d(0, 0px, 0)', opacity: 1},
     config: config.stiff,
-  }));
-
-  set({transform: 'translate3d(0, 0px, 0)', opacity: 1});
+  });
 
   return (
     <div className="Search">

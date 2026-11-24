@@ -206,21 +206,21 @@ function MapVisualizer({
             .attr('stroke-width', 1.8)
             .attr('stroke-opacity', 0)
             .style('cursor', 'pointer')
-            .on('mouseenter', (d) => {
+            .on('mouseenter', (event, d) => {
               setRegionHighlighted({
                 stateCode: STATE_CODES[d.properties.st_nm],
                 districtName: d.properties.district,
               });
             })
-            .on('mouseleave', (d) => {
+            .on('mouseleave', (event, d) => {
               if (onceTouchedRegion === d) onceTouchedRegion = null;
             })
-            .on('touchstart', (d) => {
+            .on('touchstart', (event, d) => {
               if (onceTouchedRegion === d) onceTouchedRegion = null;
               else onceTouchedRegion = d;
             })
-            .on('click', (d) => {
-              d3.event.stopPropagation();
+            .on('click', (event, d) => {
+              event.stopPropagation();
               if (onceTouchedRegion || mapMeta.mapType === MAP_TYPES.STATE)
                 return;
               // Disable pointer events till the new map is rendered
@@ -305,14 +305,14 @@ function MapVisualizer({
           .attr('fill-opacity', 0.5)
           .style('cursor', 'pointer')
           .attr('pointer-events', 'all')
-          .on('mouseenter', (d) => {
+          .on('mouseenter', (event, d) => {
             setRegionHighlighted({
               stateCode: STATE_CODES[d.properties.st_nm],
               districtName: d.properties.district || UNKNOWN_DISTRICT_KEY,
             });
           })
-          .on('click', () => {
-            d3.event.stopPropagation();
+          .on('click', (event) => {
+            event.stopPropagation();
           })
       )
       .transition(t)

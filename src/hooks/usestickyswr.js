@@ -1,4 +1,4 @@
-import produce from 'immer';
+import {produce} from 'immer';
 import {useState} from 'react';
 import {useUpdateEffect} from 'react-use';
 import useSWR from 'swr';
@@ -16,7 +16,7 @@ export function useStickySWR(key, fetcher, swrOptions, ...args) {
   useUpdateEffect(() => {
     setOptions(
       produce(options, (draftOptions) => {
-        draftOptions.initialData = data;
+        draftOptions.fallbackData = data;
       })
     );
   }, [data]);

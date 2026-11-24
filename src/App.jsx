@@ -8,11 +8,12 @@ import {Helmet} from 'react-helmet';
 import {useTranslation} from 'react-i18next';
 import {
   BrowserRouter as Router,
+  Navigate,
   Route,
-  Redirect,
-  Switch,
+  Routes,
+  useParams,
 } from 'react-router-dom';
-import useDarkMode from 'use-dark-mode';
+import useDarkMode from './hooks/usedarkmode';
 
 const Home = lazy(() =>
   import('./components/home' /* webpackChunkName: "Home" */)
@@ -38,6 +39,11 @@ const schemaMarkup = {
   url: 'https://www.covid19india.org/',
   image: 'https://www.covid19india.org/thumbnail.png',
 };
+
+function PageView({view: View, index}) {
+  const {stateCode} = useParams();
+  return <View key={stateCode || index} />;
+}
 
 function App() {
   const {t} = useTranslation();
@@ -89,33 +95,24 @@ function App() {
 
       <Router>
         <ScrollToTop />
-        <Route
-          render={({location}) => (
-            <React.Fragment>
-              <Navbar
-                pages={pages}
-                {...{darkMode}}
-                {...{showLanguageSwitcher, setShowLanguageSwitcher}}
-              />
-
-              <Switch location={location}>
-                {pages.map((page, index) => {
-                  return (
-                    <Route
-                      exact
-                      path={page.pageLink}
-                      render={({match}) => (
-                        <page.view key={match.params.stateCode || index} />
-                      )}
-                      key={index}
-                    />
-                  );
-                })}
-                <Redirect to="/" />
-              </Switch>
-            </React.Fragment>
-          )}
+        <Navbar
+          pages={pages}
+          {...{darkMode}}
+          {...{showLanguageSwitcher, setShowLanguageSwitcher}}
         />
+
+        <Routes>
+          {pages.map((page, index) => {
+            return (
+              <Route
+                path={page.pageLink}
+                element={<PageView view={page.view} index={index} />}
+                key={index}
+              />
+            );
+          })}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </Router>
     </div>
   );

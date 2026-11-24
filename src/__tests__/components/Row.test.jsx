@@ -1,7 +1,7 @@
 import Row from '../../components/row';
 import {STATE_NAMES} from '../../constants';
 
-import {mount} from 'enzyme';
+import {fireEvent, render} from '@testing-library/react';
 import React from 'react';
 import {MemoryRouter} from 'react-router-dom';
 
@@ -38,15 +38,16 @@ const data = {
 describe('Row component', () => {
   const RealDate = Date;
 
-  const wrapper = mount(
-    <MemoryRouter>
-      <table>
-        <tbody>
-          <Row {...{stateCode, data}} />
-        </tbody>
-      </table>
-    </MemoryRouter>
-  );
+  const renderRow = () =>
+    render(
+      <MemoryRouter>
+        <table>
+          <tbody>
+            <Row {...{stateCode, data}} />
+          </tbody>
+        </table>
+      </MemoryRouter>
+    ).container;
 
   beforeAll(() => {
     const mockedDate = new Date('2020-05-24');
@@ -63,14 +64,15 @@ describe('Row component', () => {
   });
 
   test('State/UT details', () => {
-    const stateSelector = wrapper.find('tr.state');
-    const cells = stateSelector.find('td');
+    const container = renderRow();
+    const stateSelector = container.querySelectorAll('tr.state');
+    const cells = stateSelector[0].querySelectorAll('td');
 
-    const stateName = cells.at(0).text();
-    const confirmed = cells.at(1).text();
-    const active = cells.at(2).text();
-    const recovered = cells.at(3).text();
-    const deaths = cells.at(4).text();
+    const stateName = cells[0].textContent;
+    const confirmed = cells[1].textContent;
+    const active = cells[2].textContent;
+    const recovered = cells[3].textContent;
+    const deaths = cells[4].textContent;
 
     expect(stateSelector).toHaveLength(1);
     expect(cells).toHaveLength(5);
@@ -82,24 +84,23 @@ describe('Row component', () => {
   });
 
   test('Districts and the confirmed cases', () => {
-    const stateRow = wrapper.find('tr.state');
+    const container = renderRow();
+    const stateRow = container.querySelectorAll('tr.state');
     expect(stateRow).toHaveLength(1);
 
-    stateRow.simulate('click');
+    fireEvent.click(stateRow[0]);
 
-    const districtsSelector = wrapper.find('tr.district');
-    const stateLastUpdate = wrapper.find('tr.state-last-update');
-    const stateLastUpdateTime = stateLastUpdate.find('td > p');
-
-    console.log(stateLastUpdateTime);
+    const districtsSelector = container.querySelectorAll('tr.district');
+    const stateLastUpdate = container.querySelectorAll('tr.state-last-update');
+    const stateLastUpdateTime = stateLastUpdate[0].querySelectorAll('td > p');
 
     expect(districtsSelector).toHaveLength(2);
-    expect(stateLastUpdateTime.at(1).text()).toMatch(/2 days ago/i);
+    expect(stateLastUpdateTime[1].textContent).toMatch(/2 days ago/i);
 
     districtsSelector.forEach((e, index) => {
-      const cells = e.find('td');
-      const district = cells.at(0).childAt(0).text();
-      const confirmedNumber = cells.at(1).text();
+      const cells = e.querySelectorAll('td');
+      const district = cells[0].children[0].textContent;
+      const confirmedNumber = cells[1].textContent;
 
       expect(data.districts[district].total).not.toBeUndefined();
       expect(data.districts[district].total['confirmed']).toEqual(

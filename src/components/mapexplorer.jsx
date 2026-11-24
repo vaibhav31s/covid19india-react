@@ -19,10 +19,10 @@ import {
   getStatistic,
 } from '../utils/commonfunctions';
 
-import {PinIcon} from '@primer/octicons-v2-react';
+import {PinIcon} from '@primer/octicons-react';
 import classnames from 'classnames';
 import equal from 'fast-deep-equal';
-import produce from 'immer';
+import {produce} from 'immer';
 import React, {
   useCallback,
   useEffect,
@@ -34,7 +34,7 @@ import React, {
 import ReactDOM from 'react-dom';
 import * as Icon from 'react-feather';
 import {useTranslation} from 'react-i18next';
-import {useHistory} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import {useSprings, animated} from 'react-spring';
 
 function MapExplorer({
@@ -49,7 +49,7 @@ function MapExplorer({
   isCountryLoaded = true,
 }) {
   const {t} = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const mapExplorerRef = useRef();
 
@@ -305,13 +305,13 @@ function MapExplorer({
             <h5>{t(capitalize(statistic))}</h5>
             <div className="stats-bottom">
               <animated.h1>
-                {springs[index].total.interpolate((total) =>
+                {springs[index].total.to((total) =>
                   formatNumber(Math.floor(total))
                 )}
               </animated.h1>
               {statistic !== 'tested' && statistic !== 'active' && (
                 <animated.h6>
-                  {springs[index].delta.interpolate((delta) =>
+                  {springs[index].delta.to((delta) =>
                     delta > 0 ? `+${formatNumber(Math.floor(delta))}` : '\u00A0'
                   )}
                 </animated.h6>
@@ -341,7 +341,7 @@ function MapExplorer({
         {currentMapMeta.mapType === MAP_TYPES.STATE && (
           <div
             className="map-button"
-            onClick={() => history.push(`state/${currentMap.code}`)}
+            onClick={() => navigate(`state/${currentMap.code}`)}
           >
             {t('Visit state page')}
             <Icon.ArrowRightCircle />

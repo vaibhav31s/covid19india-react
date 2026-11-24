@@ -159,8 +159,8 @@ function TimeSeries({timeseries, dates, chartType, isUniform, isLog}) {
         .range([chartBottom, margin.top]);
     };
 
-    function mousemove() {
-      const xm = d3.mouse(this)[0];
+    function mousemove(event) {
+      const xm = d3.pointer(event, this)[0];
       const date = xScale.invert(xm);
       const bisectDate = d3.bisector((date) => parseIndiaDate(date)).left;
       const index = bisectDate(dates, date, 1);

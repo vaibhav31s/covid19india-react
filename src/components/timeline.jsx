@@ -4,26 +4,30 @@ import clamp from 'lodash/clamp';
 import React, {useState} from 'react';
 import {useSprings, useTransition, animated, config} from 'react-spring';
 import {useMeasure, useKeyPressEvent} from 'react-use';
-import {useDrag} from 'react-use-gesture';
+import {useDrag} from '@use-gesture/react';
 
 const Timeline = ({setIsTimelineMode, setDate, dates}) => {
   const [timelineElement, {width}] = useMeasure();
   const [index, setIndex] = useState(0);
 
-  const [springs, set] = useSprings(
-    dates.length,
-    (i) => ({
-      x: (index - i) * (480 / 3) + 480 / 2 - 35,
-      color: i === 0 ? '#6c757d' : '#6c757d99',
-      opacity: i < 2 ? 1 : 0,
-    }),
-    config.stiff
-  );
+  const [springs, api] = useSprings(dates.length, (i) => ({
+    x: (index - i) * (480 / 3) + 480 / 2 - 35,
+    color: i === 0 ? '#6c757d' : '#6c757d99',
+    opacity: i < 2 ? 1 : 0,
+    display: 'block',
+    config: config.stiff,
+  }));
 
   const bind = useDrag(
-    ({down, delta: [xDelta], direction: [xDir], distance, cancel}) => {
+    ({
+      down,
+      delta: [xDelta],
+      direction: [xDir],
+      distance: [dx, dy],
+      cancel,
+    }) => {
       const clampedIndex = getClampedIndex(xDir);
-      if (down && distance > 25) {
+      if (down && Math.hypot(dx, dy) > 25) {
         cancel(setIndex(clampedIndex));
         setClampedDate(clampedIndex);
       }
@@ -41,7 +45,7 @@ const Timeline = ({setIsTimelineMode, setDate, dates}) => {
   };
 
   const setSprings = ({direction, clampedIndex, down, xDelta}) => {
-    set((i) => {
+    api.start((i) => {
       if (i < clampedIndex - 1) {
         return {x: width, color: '#6c757d99', opacity: 0, display: 'none'};
       } else if (i > clampedIndex + 1) {
@@ -122,15 +126,11 @@ const Timeline = ({setIsTimelineMode, setDate, dates}) => {
     '2020-06-01': 'Beginning of Lockdown Phase 5',
   };
 
-  const transition = useTransition(
-    timeline.hasOwnProperty(dates[index]),
-    null,
-    {
-      from: {transform: 'translate3d(0, 20px, 0)', opacity: 0},
-      enter: {transform: 'translate3d(0, 0px, 0)', opacity: 1},
-      leave: {transform: 'translate3d(0, 20px, 0)', opacity: 0},
-    }
-  );
+  const transition = useTransition(timeline.hasOwnProperty(dates[index]), {
+    from: {transform: 'translate3d(0, 20px, 0)', opacity: 0},
+    enter: {transform: 'translate3d(0, 0px, 0)', opacity: 1},
+    leave: {transform: 'translate3d(0, 20px, 0)', opacity: 0},
+  });
 
   const handleClick = (clampedIndex) => {
     if (clampedIndex > index) {
@@ -142,10 +142,10 @@ const Timeline = ({setIsTimelineMode, setDate, dates}) => {
 
   return (
     <React.Fragment>
-      {transition.map(
-        ({item, key, props}) =>
+      {transition(
+        (style, item) =>
           item && (
-            <animated.h5 className="highlight" key={key} style={props}>
+            <animated.h5 className="highlight" style={style}>
               {timeline[dates[index]]}
             </animated.h5>
           )
@@ -167,7 +167,7 @@ const Timeline = ({setIsTimelineMode, setDate, dates}) => {
               className="day"
               key={i}
               style={{
-                transform: x.interpolate((x) => `translate3d(${x}px,0,0)`),
+                transform: x.to((x) => `translate3d(${x}px,0,0)`),
                 opacity,
                 display,
               }}

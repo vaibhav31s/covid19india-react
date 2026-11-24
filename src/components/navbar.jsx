@@ -1,6 +1,6 @@
 import locales from '../i18n/locales.json';
 
-import anime from 'animejs';
+import {animate} from 'animejs';
 import React, {useState, useRef} from 'react';
 import * as Icon from 'react-feather';
 import {useTranslation} from 'react-i18next';
@@ -23,9 +23,7 @@ function Navbar({
   useLockBodyScroll(expand);
   const windowSize = useWindowSize();
 
-  const [spring, set, stop] = useSpring(() => ({opacity: 0}));
-  set({opacity: 1});
-  stop();
+  const spring = useSpring({from: {opacity: 0}, to: {opacity: 1}});
 
   return (
     <animated.div className="Navbar" style={spring}>
@@ -105,10 +103,9 @@ function Expand({expand, pages, setExpand, darkMode, windowSize}) {
   const {t} = useTranslation();
 
   useEffectOnce(() => {
-    anime({
-      targets: expandElement.current,
+    animate(expandElement.current, {
       translateX: '10.5rem',
-      easing: 'easeOutExpo',
+      ease: 'outExpo',
       duration: 250,
     });
   });

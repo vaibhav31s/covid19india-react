@@ -27,7 +27,7 @@ function LanguageSwitcher({showLanguageSwitcher, setShowLanguageSwitcher}) {
     ? i18n?.language
     : i18n?.options?.fallbackLng[0];
 
-  const transitions = useTransition(showLanguageSwitcher, null, {
+  const transitions = useTransition(showLanguageSwitcher, {
     from: FADE_OUT,
     enter: FADE_IN,
     leave: FADE_OUT,
@@ -43,12 +43,11 @@ function LanguageSwitcher({showLanguageSwitcher, setShowLanguageSwitcher}) {
     setShowLanguageSwitcher(false);
   });
 
-  return transitions.map(({item, key, props}) =>
+  return transitions((style, item) =>
     item ? (
       <animated.div
-        key={key}
         className="LanguageSwitcher"
-        style={props}
+        style={style}
         ref={languageSwitcherRef}
       >
         <h3>We speak the following languages</h3>
@@ -79,7 +78,7 @@ function LanguageSwitcher({showLanguageSwitcher, setShowLanguageSwitcher}) {
         </span>
       </animated.div>
     ) : (
-      <animated.div key={key}></animated.div>
+      <animated.div></animated.div>
     )
   );
 }

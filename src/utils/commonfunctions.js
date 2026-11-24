@@ -2,17 +2,17 @@ import {INDIA_ISO_SUFFIX, LOCALE_SHORTHANDS} from '../constants';
 
 import axios from 'axios';
 import {format, formatDistance, formatISO, subDays} from 'date-fns';
-import {utcToZonedTime} from 'date-fns-tz';
+import {toZonedTime} from 'date-fns-tz';
 import i18n from 'i18next';
 
 export const isDevelopmentOrTest = () => {
-  if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test')
+  if (import.meta.env.MODE === 'development' || import.meta.env.MODE === 'test')
     return true;
   return false;
 };
 
 export const getIndiaDate = () => {
-  return utcToZonedTime(new Date(), 'Asia/Kolkata');
+  return toZonedTime(new Date(), 'Asia/Kolkata');
 };
 
 export const getIndiaYesterdayISO = () => {
@@ -35,7 +35,7 @@ export const formatDate = (unformattedDate, formatString) => {
     unformattedDate.match(/^\d{4}-([0]\d|1[0-2])-([0-2]\d|3[01])$/g)
   )
     unformattedDate += INDIA_ISO_SUFFIX;
-  const date = utcToZonedTime(new Date(unformattedDate), 'Asia/Kolkata');
+  const date = toZonedTime(new Date(unformattedDate), 'Asia/Kolkata');
   return format(date, formatString, {
     locale: LOCALE_SHORTHANDS[i18n.language],
   });

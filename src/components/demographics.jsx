@@ -8,6 +8,8 @@ import axios from 'axios';
 import {format, subDays, isWithinInterval, parse} from 'date-fns';
 import React, {useState, useEffect, useCallback} from 'react';
 import DatePicker from 'react-date-picker';
+import 'react-date-picker/dist/DatePicker.css';
+import 'react-calendar/dist/Calendar.css';
 import * as Icon from 'react-feather';
 import {Helmet} from 'react-helmet';
 import {useLocation} from 'react-router-dom';
